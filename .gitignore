@@ -1,0 +1,49 @@
+# Byte-compiled / optimised
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Secrets and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+!.env.example
+secrets/
+
+# Distribution
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.bandit-report.json
+
+# Qodana
+.qodana/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Audit log exports (never commit real audit data)
+audit-exports/
+.venv/

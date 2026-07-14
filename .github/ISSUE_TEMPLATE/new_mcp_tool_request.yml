@@ -1,0 +1,69 @@
+name: New MCP Tool Request
+description: Request a new MCP tool with security screening
+title: "[TOOL] "
+labels: ["new-tool", "security-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        New tool requests require Article 35 screening and permission justification.
+
+  - type: dropdown
+    id: server
+    attributes:
+      label: Target Server
+      options:
+        - jol-git-server
+        - jol-jira-server
+        - jol-compliance-server
+        - jol-docs-server
+        - new server
+    validations:
+      required: true
+
+  - type: textarea
+    id: tool-description
+    attributes:
+      label: Tool Description
+      description: What should the tool do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: data-access
+    attributes:
+      label: Data Access Requirements
+      description: |
+        - What data does this tool read?
+        - What data does this tool write (if any)?
+        - Does this tool access PII?
+    validations:
+      required: true
+
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Minimum Permission Justification
+      description: Justify each permission the tool requires
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: article35
+    attributes:
+      label: Article 35 Screening
+      options:
+        - label: This tool does NOT process personal data
+        - label: OR — DPIA screening completed and documented
+        - label: Threat model impact assessed
+        - label: Capability manifest entry drafted
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-plan
+    attributes:
+      label: Test Plan
+      description: How will you verify the tool works securely?
+    validations:
+      required: true

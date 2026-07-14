@@ -1,0 +1,53 @@
+[project]
+name = "jol-mcp-servers"
+version = "0.1.0"
+description = "Journey of Life MCP server suite — secure tool access for AI agents"
+requires-python = ">=3.12"
+license = { text = "Proprietary — All Rights Reserved" }
+authors = [
+    { name = "Journey of Life Platform Core", email = "platform-core@journeyoflife.io" },
+]
+
+[tool.uv]
+# Workspace root — all servers share tooling
+dev-dependencies = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "mypy>=1.10",
+    "ruff>=0.4",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyjwt>=2.8",
+    "mcp>=1.0",
+]
+
+[tool.ruff]
+line-length = 99
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "S", "UP", "B", "A", "C4", "T20"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "S603", "S607"]
+"*/tests/**" = ["S101", "S105", "S106", "S603", "S607"]
+"servers/*/tests/**" = ["S101", "S105", "S106", "S603", "S607"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "*.tests.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests", "servers"]
+addopts = "-v --tb=short"

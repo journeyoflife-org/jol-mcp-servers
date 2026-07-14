@@ -1,0 +1,16 @@
+version: "1.0"
+
+include:
+  - name: qodana-community
+    paths:
+      - .
+
+profile:
+  name: qodana.recommended
+
+# Suppress inspections that conflict with Python 3.12 + dataclasses
+exclude:
+  # PyCharm Python 2 check: @dataclass auto-generates __init__
+  - name: PyClassHasNoInitInspection
+  # Conflicts with re.Pattern (PEP 585) and modern typing
+  - name: PyTypeHintsInspection

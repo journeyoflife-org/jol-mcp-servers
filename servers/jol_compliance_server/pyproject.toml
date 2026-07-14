@@ -1,0 +1,12 @@
+[project]
+name = "jol-compliance-server"
+version = "0.1.0"
+description = "MCP compliance server — read-only policy access"
+requires-python = ">=3.12"
+license = { text = "Proprietary — All Rights Reserved" }
+dependencies = [
+    "mcp>=1.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyjwt>=2.8",
+]

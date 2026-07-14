@@ -1,0 +1,50 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "python"
+
+  - package-ecosystem: "pip"
+    directory: "/servers/jol_git_server"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "git-server"
+
+  - package-ecosystem: "pip"
+    directory: "/servers/jol_jira_server"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "jira-server"
+
+  - package-ecosystem: "pip"
+    directory: "/servers/jol_compliance_server"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "compliance-server"
+
+  - package-ecosystem: "pip"
+    directory: "/servers/jol_docs_server"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "docs-server"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "ci"
