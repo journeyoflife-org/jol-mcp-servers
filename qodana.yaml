@@ -1,3 +1,6 @@
+# Qodana Cloud configuration — jol-mcp-servers
+# Project is identified via QODANA_TOKEN in CI, not by key here.
+# See: https://www.jetbrains.com/help/qodana/yaml.html
 version: "1.0"
 
 include:
@@ -8,9 +11,9 @@ include:
 profile:
   name: qodana.recommended
 
-# Suppress inspections that conflict with Python 3.12 + dataclasses
+# Suppress inspections that produce false positives for Python 3.12 patterns
 exclude:
-  # PyCharm Python 2 check: @dataclass auto-generates __init__
+  # @dataclass(frozen=True) auto-generates __init__ — Python 2-only check
   - name: PyClassHasNoInitInspection
-  # Conflicts with re.Pattern (PEP 585) and modern typing
+  # re.Pattern (PEP 585) and modern union syntax not recognised by older checker
   - name: PyTypeHintsInspection
