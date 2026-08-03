@@ -1,0 +1,21 @@
+# OWASP ZAP baseline rules for the jol-mcp-servers DAST probe.
+#
+# Format: <rule_id> <TAB> <action> <TAB> [url_regex]
+#   Actions: IGNORE | WARN | FAIL
+#   Unlisted rules default to WARN (warnings do not fail the scan).
+#
+# The probe target is a machine-to-machine JSON-RPC endpoint
+# (MCP streamable-http on loopback, no HTML, no cookies, no TLS in CI),
+# so browser-oriented hardening checks are not applicable and are
+# explicitly ignored. Anything unexpected beyond that should surface
+# as a warning at minimum.
+10020	IGNORE
+10021	IGNORE
+10035	IGNORE
+10050	IGNORE
+10109	IGNORE
+# 10020 X-Frame-Options Header — no HTML content to frame
+# 10021 X-Content-Type-Options Header Missing — API responses, no MIME-sniffing surface
+# 10035 Strict-Transport-Security Header — plain-HTTP loopback probe, no TLS in CI
+# 10050 Content Security Policy Header Not Set — no HTML content
+# 10109 Modern Web Application — informational only
