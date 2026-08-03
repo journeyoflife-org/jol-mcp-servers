@@ -58,7 +58,7 @@ jobs:
           done
 
       - name: OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@66042c8e7e24680119199a017e5b0e8603bf4dae  # v0.12.0
+        uses: zaproxy/action-baseline@7c4deb10e6261301961c86d65d54a516394f9aed  # v0.14.0
         with:
           target: "http://localhost:8080/mcp"
           rules_file_name: ".zap/rules.tsv"
@@ -66,13 +66,7 @@ jobs:
           # Findings are triaged in .zap/rules.tsv; skip auto-filing a
           # GitHub issue for tolerated WARNs (needs issues:write anyway).
           allow_issue_writing: false
-
-      - name: Upload ZAP Report
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
-        with:
-          name: zap-report
-          path: report_html.html
+          artifact_name: "zap-scan-reports"
 
       - name: Stop probe target
         if: always()
