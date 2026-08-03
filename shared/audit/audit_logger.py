@@ -28,6 +28,8 @@ class AuditLogger:
     def __init__(self, server_name: str, log_handler: Handler | None = None) -> None:
         self._server_name = server_name
         self._logger = logging.getLogger(f"jol.audit.{server_name}")
+        self._logger.propagate = False  # JSON lines must not duplicate via root handlers
+        self._logger.handlers.clear()  # logger is a singleton per name; avoid handler pile-up
         if log_handler:
             self._logger.addHandler(log_handler)
         else:
