@@ -40,10 +40,14 @@ jobs:
       - name: Install detect-secrets
         run: pip install detect-secrets
 
-      - name: Run detect-secrets scan
+      - name: Run detect-secrets scan (non-interactive baseline mode)
         run: |
-          detect-secrets scan --all-files \
+          detect-secrets scan --baseline .secrets.baseline \
+            --all-files \
             --exclude-files '\.git/' \
             --exclude-files '\.venv/' \
-            > .secrets.baseline
-          detect-secrets audit .secrets.baseline
+            --exclude-files '\.qodana/' \
+            --exclude-files '\.ruff_cache/' \
+            --exclude-files '\.mypy_cache/' \
+            --exclude-files '\.pytest_cache/' \
+            --exclude-files '\.bandit-report\.json'
