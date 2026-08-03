@@ -63,6 +63,9 @@ jobs:
           target: "http://localhost:8080/mcp"
           rules_file_name: ".zap/rules.tsv"
           cmd_options: "-a -m 10 -T 60"
+          # Findings are triaged in .zap/rules.tsv; skip auto-filing a
+          # GitHub issue for tolerated WARNs (needs issues:write anyway).
+          allow_issue_writing: false
 
       - name: Upload ZAP Report
         if: always()
