@@ -15,25 +15,59 @@ jobs:
   zap-probe:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
-      - name: Start MCP servers (staging)
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      # Start one real MCP endpoint (jol-docs-server) on the streamable-http
+      # transport — the probe target. Verified locally: GET / -> 404,
+      # GET /mcp -> 406 (server up, no HTML surface to spider deeply).
+      - name: Start probe target (jol-docs-server, streamable-http)
         run: |
-          echo "Starting staging MCP endpoints for DAST probe..."
-          # Servers would be started via docker-compose or similar
-          # docker compose -f docker-compose.staging.yml up -d
-          sleep 10  # Wait for servers to be ready
+          nohup uv run python -c '
+          from servers.jol_docs_server.server import mcp
+          mcp.settings.host = "127.0.0.1"
+          mcp.settings.port = 8080
+          mcp.run(transport="streamable-http")
+          ' > mcp-probe.log 2>&1 &
+          echo $! > mcp-probe.pid
+
+          # Fail fast with diagnostics if the target never comes up.
+          # Note: no `curl -f` — the endpoint answers 406 to plain GETs,
+          # which is proof the server is up.
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:8080/mcp; then
+              echo "Probe target is up (attempt $i)."
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "::error::Probe target failed to start within 30s"
+              cat mcp-probe.log
+              exit 1
+            fi
+            sleep 1
+          done
 
       - name: OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@7c4deb10e6261301961c86d65d54a516394f9aed  # v0.14.0
         with:
-          target: "http://localhost:8080"
+          target: "http://localhost:8080/mcp"
           rules_file_name: ".zap/rules.tsv"
           cmd_options: "-a -m 10 -T 60"
+          # Findings are triaged in .zap/rules.tsv; skip auto-filing a
+          # GitHub issue for tolerated WARNs (needs issues:write anyway).
+          allow_issue_writing: false
+          artifact_name: "zap-scan-reports"
 
-      - name: Upload ZAP Report
+      - name: Stop probe target
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-report
-          path: report_html.html
+        run: kill "$(cat mcp-probe.pid)" 2>/dev/null || true
