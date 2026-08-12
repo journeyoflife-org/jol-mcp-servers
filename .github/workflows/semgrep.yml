@@ -31,11 +31,10 @@ jobs:
             --sarif \
             --output semgrep-results.sarif
 
-      # SARIF ingestion needs GitHub Code Security enabled for the repo.
-      # Until the entitlement is active the upload fails with
-      # "Resource not accessible by integration"; keep it non-fatal so the
-      # scan result itself still gates merges. Remove continue-on-error
-      # once Code Security is enabled (tracked in PR description).
+      # SARIF ingestion needs GitHub Code Security (GHAS), declined for cost
+      # ($10/committer/month); without it the upload fails with "Resource not
+      # accessible by integration". Keep it non-fatal so the scan result itself
+      # (--error above) still gates merges; the upload is informational only.
       - name: Upload SARIF to Security tab
         if: always()
         continue-on-error: true

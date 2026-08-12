@@ -25,7 +25,34 @@ jobs:
           languages: python
           queries: security-extended
 
+      # GHAS/Code Security declined for cost ($10/committer/month): without the
+      # entitlement the SARIF upload is rejected, so keep CodeQL a strict gate
+      # locally — never upload, and fail the job on any finding parsed from the
+      # SARIF the analysis produces.
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@e60ea984bd3baa95954f2856bcf24f9eaba46637  # v3
         with:
           category: "/language:python"
+          upload: never
+          output: sarif-results
+
+      - name: Gate on CodeQL findings (local SARIF)
+        run: |
+          python3 - <<'EOF'
+          import glob, json, sys
+          findings = []
+          for path in glob.glob("sarif-results/**/*.sarif", recursive=True):
+              doc = json.load(open(path))
+              for run in doc.get("runs", []):
+                  for res in run.get("results", []):
+                      rule = res.get("ruleId", "?")
+                      loc = (res.get("locations") or [{}])[0].get("physicalLocation", {})
+                      uri = loc.get("artifactLocation", {}).get("uri", "?")
+                      line = loc.get("region", {}).get("startLine", 0)
+                      findings.append(f"{rule} @ {uri}:{line}")
+          if findings:
+              for f in findings:
+                  print(f"::error::{f}")
+              sys.exit(f"CodeQL gate: {len(findings)} finding(s) — failing.")
+          print("CodeQL gate: no findings.")
+          EOF
