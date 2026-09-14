@@ -1,19 +1,32 @@
-# Qodana Cloud configuration — jol-mcp-servers
-# Project is identified via QODANA_TOKEN in CI, not by key here.
-# See: https://www.jetbrains.com/help/qodana/yaml.html
+# Qodana — jol-mcp-servers
+# Focus: Python security (bandit via S-rules), unused imports, type safety
+# MCP servers expose JSON-RPC endpoints — input validation and type safety are critical.
 version: "1.0"
 
-include:
-  - name: qodana-community
-    paths:
-      - .
+linter: jetbrains/qodana-python-community:2026.1
 
 profile:
   name: qodana.recommended
 
-# Suppress inspections that produce false positives for Python 3.12 patterns
+bootstrap: |
+  pip install --quiet ruff mypy bandit pip-audit pytest pytest-cov 2>/dev/null || true
+
+include:
+  - name: PyUnresolvedReferences
+  - name: PyShadowingNames
+  - name: PyUnusedLocal
+  - name: PyPackageRequirements
+
 exclude:
-  # @dataclass(frozen=True) auto-generates __init__ — Python 2-only check
+  - name: All
+    paths:
+      - .venv/
+      - .git/
+      - .qodana/
+      - tests/
+  # Suppress false positives for Python 3.12 patterns
   - name: PyClassHasNoInitInspection
-  # re.Pattern (PEP 585) and modern union syntax not recognised by older checker
   - name: PyTypeHintsInspection
+
+# Any CRITICAL issue fails the build
+failThreshold: 1
