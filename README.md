@@ -46,6 +46,8 @@ make scan       # Run security scans
 - [DPIA](docs/DPIA-mcp-servers.md)
 - [Audit Log Specification](docs/audit-log-specification.md)
 - [Incident Response Runbook](docs/runbook-incident-response.md)
+- [Production Server: mcp-prod-lt01](docs/servers/mcp-prod-lt01.md)
+- [Deployment Runbook: mcp-prod-lt01](docs/runbooks/mcp-prod-lt01-deployment.md)
 
 ## Security
 

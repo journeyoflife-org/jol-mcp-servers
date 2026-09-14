@@ -1,0 +1,47 @@
+---
+# Fleet-standard host variables — mcp-prod-lt01
+# Change record: GitHub Issue #29 (MCP production deployment, 2026-08-12)
+
+hostname: mcp-prod-lt01
+role: mcp-server
+environment: prod
+hypervisor: proxmox
+os: Ubuntu 24.04 LTS
+
+network:
+  mgmt_ip: 10.40.40.11
+  vlan: 40
+
+mcp:
+  service_user: mcp-svc            # nologin, no sudo
+  runtime_dir: /opt/jol-mcp-servers
+  bare_repo: /opt/jol/git/jol-mcp-servers.git   # post-receive deploy hook
+  env_file: /etc/jol-mcp/mcp.env   # root:0600, auditd-watched
+  audit_log_path: /var/log/jol-mcp/audit.jsonl
+  audit_retention_days: 14         # compressed rotation via logrotate
+  transport: stdio                 # no HTTP/SSE; port 3000 disabled
+  units:
+    - jol-git-server.service
+    - jol-jira-server.service
+    - jol-compliance-server.service
+    - jol-docs-server.service
+
+monitoring:
+  node_exporter_version: 1.8.2
+  node_exporter_bind: 10.40.40.11:9100   # interface bind only, never 0.0.0.0
+  scrape_allowed_from: 10.40.40.0/24
+
+firewall:  # UFW default-deny inbound
+  allow:
+    - { port: 22,   from: mgmt-vlan,  purpose: management }
+    - { port: 9100, from: 10.40.40.0/24, purpose: prometheus scrape }
+
+integrity:
+  aide_baseline: current           # rebuilt post-change, nightly check rc=0
+  auditd_mode: immutable           # -e 2
+
+jol_audit_secret_files:
+  - /etc/jol-mcp/mcp.env
+
+rollback:
+  proxmox_snapshot: pre-mcp-fix-20260812-2213
