@@ -10,6 +10,12 @@ authors = [
 
 [tool.uv]
 # Workspace root — all servers share tooling
+# Supply-chain cooldown: ignore releases published within the last 7 days
+# when resolving (rolling window; lockfile installs are unaffected).
+exclude-newer = "7 days"
+# Security exemption: cryptography 50.0.0 fixes CVE-2026-69247 and must
+# not be held back by the cooldown. Remove once the window passes it.
+exclude-newer-package = { cryptography = false }
 dev-dependencies = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",

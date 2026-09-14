@@ -1,9 +1,13 @@
 version: 2
+# Cooldown: hold newly published versions for 7 days before proposing
+# updates — supply-chain defence against malicious/defective releases.
 updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
@@ -13,6 +17,8 @@ updates:
     directory: "/servers/jol_git_server"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "dependencies"
       - "git-server"
@@ -21,6 +27,8 @@ updates:
     directory: "/servers/jol_jira_server"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "dependencies"
       - "jira-server"
@@ -29,6 +37,8 @@ updates:
     directory: "/servers/jol_compliance_server"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "dependencies"
       - "compliance-server"
@@ -37,6 +47,8 @@ updates:
     directory: "/servers/jol_docs_server"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "dependencies"
       - "docs-server"
@@ -45,6 +57,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "dependencies"
       - "ci"
