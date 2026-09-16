@@ -5,10 +5,8 @@
 name: Qodana
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+  workflow_dispatch:
+  # Push/PR triggers disabled — QODANA_TOKEN expired; will re-enable when license is purchased pre-deployment.
 
 permissions:
   contents: read
