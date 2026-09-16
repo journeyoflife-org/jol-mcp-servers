@@ -8,7 +8,7 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "python"
@@ -59,6 +59,13 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "ci"
+    # R5 2026-09-16: Hold major bumps until the CI pipeline stabilises.
+    ignore:
+      - dependency-name: "github/codeql-action"
+        versions: [">=4.0.0"]
+      - dependency-name: "JetBrains/qodana-action"
+        versions: [">=2027.0.0"]
